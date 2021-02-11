@@ -14,11 +14,12 @@ const App: React.FC = () => {
     };
 
     TouchID.authenticate('Login app', configs)
-      .then((res) => {
-        setName('Charles Pereira');
-        console.log(`Acesso permitido = ${res}`);
+      .then((res: string) => {
+        if (res) {
+          setName('Charles Pereira');
+        }
       })
-      .catch((error) => {
+      .catch((error: string) => {
         console.log(`Acesso negado = ${error}`);
       });
   };
@@ -41,7 +42,7 @@ const App: React.FC = () => {
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableHighlight>
       <Text style={styles.text}>
-        {name ? `Bem vindo ${name}` : 'Bem vindo a tela de login'}
+        {supported ? `Bem vindo ${name}` : 'Bem vindo a tela de login'}
       </Text>
     </View>
   );
