@@ -3,19 +3,34 @@ import {View, Text, StyleSheet, TouchableHighlight, Alert} from 'react-native';
 import TouchID from 'react-native-touch-id';
 
 const App: React.FC = () => {
-  const [supported, setSupported] = useState(false);
+  const [supported, setSupported] = useState<boolean>(false);
+  const [name, setName] = useState('');
 
   const handleLogin = () => {
-    console.log('eu');
+    const configs = {
+      title: 'Autenticação Touch ID',
+      color: '#FF0000',
+      sensorErrorDescription: 'Touch ID invalido.',
+    };
+
+    TouchID.authenticate('Login app', configs)
+      .then((res) => {
+        setName('Charles Pereira');
+        console.log(`Acesso permitido = ${res}`);
+      })
+      .catch((error) => {
+        console.log(`Acesso negado = ${error}`);
+      });
   };
 
   useEffect(() => {
     TouchID.isSupported()
-      .then((sucess) => {
+      .then((response) => {
         setSupported(true);
+        console.log(`Acesso permitido = ${response}`);
       })
       .catch((error) => {
-        console.log('Error' + error);
+        console.log(`Acesso negado = ${error}`);
         Alert.alert('Touch ID não suportado/habilitado');
       });
   }, []);
@@ -25,7 +40,9 @@ const App: React.FC = () => {
       <TouchableHighlight style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableHighlight>
-      <Text style={styles.text}>Hello word</Text>
+      <Text style={styles.text}>
+        {name ? `Bem vindo ${name}` : 'Bem vindo a tela de login'}
+      </Text>
     </View>
   );
 };
